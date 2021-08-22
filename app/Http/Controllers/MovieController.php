@@ -16,7 +16,7 @@ class MovieController extends Controller
     public function index()
     {
         $movies = Movie::get();
-        return view('movies.index', compact('movies'));
+        return view('home', compact('movies'));
     }
 
     /**
@@ -95,12 +95,12 @@ class MovieController extends Controller
 
         $data = $request->all();
 
-        if($data['global_event_setting'] == 0){
-            if($data['minimum_time'] < $data['granularity']){
+        if ($data['global_event_setting'] == 0) {
+            if ($data['minimum_time'] < $data['granularity']) {
                 return redirect()->route('types.create', $this->event_name)->with('error_message', 'Sorry! Minimum time should not be less then granularity');
             }
 
-            if($data['maximum_time'] < $data['granularity']){
+            if ($data['maximum_time'] < $data['granularity']) {
                 return redirect()->route('types.create', $this->event_name)->with('error_message', 'Sorry! Maximum time should be greater then granularity');
             }
         }
@@ -131,7 +131,7 @@ class MovieController extends Controller
      */
     public function destroy(Request $request)
     {
-        if($request->filled('meeting_type_id')){
+        if ($request->filled('meeting_type_id')) {
             $meeting_type = Movie::find($request->input('meeting_type_id'));
             $meeting_type->deleted_by = Auth::user()->id;
             $meeting_type->save();
