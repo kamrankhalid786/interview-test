@@ -17,6 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+// 'Api\MoviesApi@index'
 
-
-Route::get('movies', 'MoviesApi@index');
+Route::get('/movies', 'App\Http\Controllers\Api\MoviesApi@index');
