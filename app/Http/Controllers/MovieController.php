@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MovieRequest;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,28 +36,21 @@ class MovieController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Movie $request)
+    public function store(MovieRequest $request)
     {
         $data = $request->all();
 
+        $movie = new Movie();
+        $movie->name = $data['name'];
+        $movie->description = $data['description'];
+        $movie->release_date = $data['release_date'];
+        $movie->price = $data['price'];
+        $movie->country_name = $data['country_name'];
+        $movie->photo = $data['photo'];
+        $movie->created_by = Auth::user()->id;
+        $movie->save();
 
-        $meeting_type = Movie::create([
-            'meeting_type_title' => $data['meeting_type_title'],
-            'minimum_time' => $data['minimum_time'],
-            'maximum_time' => $data['maximum_time'],
-            'granularity' => $data['granularity'],
-            'can_arrange_virtual_meetings' => $data['can_arrange_virtual_meetings'],
-            'global_event_setting' => $data['global_event_setting'],
-            'minimum_participants' => $data['minimum_participants'],
-            'maximum_participants' => $data['maximum_participants'],
-            'event_id' => session('event_id'),
-            'status' => $data['status'],
-            'created_by' => Auth::user()->id,
-            'extendable' => request('extendable'),
-            'extendable_time' => (request('extendable') && request('extendable') == 1) ? request('extendable_time') : 0,
-        ]);
-
-        return redirect()->route('types.index', $this->event_name)->with('success_message', 'Meeting Type Succesfully Added!');
+        return redirect()->route('home')->with('status', 'Movie Succesfully Added!');
     }
 
     /**
@@ -67,7 +61,7 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        return view('locations.show', compact('movie'));
+        return view('movies.show', compact('movie'));
     }
 
     /**
@@ -120,7 +114,7 @@ class MovieController extends Controller
 
         $meeting_type->save();
 
-        return redirect()->route('types.index', $this->event_name)->with('success_message', 'Meeting Type Succesfully Updated!');
+        return redirect()->route('home', $this->event_name)->with('success_message', 'Meeting Type Succesfully Updated!');
     }
 
     /**
@@ -129,16 +123,16 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
-        if ($request->filled('meeting_type_id')) {
-            $meeting_type = Movie::find($request->input('meeting_type_id'));
-            $meeting_type->deleted_by = Auth::user()->id;
-            $meeting_type->save();
-            $meeting_type->delete();
-            return redirect()->route('types.index', $this->event_name)->with('success_message', 'Meeting Type Succesfully Deleted!');
+        $movie = Movie::find($id);
+
+        if ($movie->genres) {
+            $movie->genres->each->delete();
         }
 
-        return redirect()->route('types.index', $this->event_name)->with('error_message', 'Sorry! Something Went Wrong');
+        $movie->delete();
+
+        return redirect()->route('home')->with('status', 'Record deleted');
     }
 }

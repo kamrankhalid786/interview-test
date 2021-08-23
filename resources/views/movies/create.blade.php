@@ -51,6 +51,10 @@
                             <label for="description">Description</label>
                             <textarea class="form-control" name="description" id="description" rows="3"></textarea>
                         </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="{{ route('movies.index') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
                     </form>
                 </div>
             </div>
