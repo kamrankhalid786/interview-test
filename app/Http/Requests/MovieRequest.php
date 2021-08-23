@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Movie extends FormRequest
+class MovieRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -12,16 +12,6 @@ class Movie extends FormRequest
      * @return bool
      */
     public function authorize()
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
     {
         return [
             'name' => 'required|max:150',
@@ -34,7 +24,12 @@ class Movie extends FormRequest
         ];
     }
 
-    public function messages()
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
     {
         return [
             'name.required' => "Item Name is required",
