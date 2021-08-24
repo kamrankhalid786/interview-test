@@ -439,7 +439,7 @@
                                 </path>
                             </svg>
                             <div class="ml-4 text-lg leading-7 font-semibold"><a href="https://laravel.com/docs"
-                                    class="underline text-gray-900 dark:text-white">@{{movie.name}}</a></div>
+                                    class="underline text-gray-900 dark:text-white">@{{ movie . name }}</a></div>
                         </div>
 
                         <div class="ml-12">
@@ -476,27 +476,12 @@
                     ));
             },
             listen() {
-                Echo.channel('{{ env('PREFIX_SOCKET') }}user_message' + this.userId + this.userType)
+                Echo.channel('movies-listing')
                     .listen(
-                        '.SendUserMessage', (data) => {
+                        '.MoviesEventListner', (data) => {
                             console.log(data);
                         })
             }
         }
-    });
-
-    $('body').on('click', '#chat_with_user', function() {
-
-        //console.log('ss');
-        var user_id = $(this).attr('user_id');
-        var type = $(this).attr('type');
-        var isMobile = screenSize();
-        $('.chats__detail').removeClass('d-flex');
-        $('.chats__listing').show();
-        if ($('.chats').hasClass('chats--close')) {
-            (isMobile) ? $('.chats').toggleClass('chats--close').css('top', '0px'): $('.chats').toggleClass(
-                'chats--close')
-        }
-        app.getUser(user_id, type, null);
     });
 </script>

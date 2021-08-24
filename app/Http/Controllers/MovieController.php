@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MoviesEventListner;
 use App\Http\Requests\MovieRequest;
 use App\Models\Movie;
 use Illuminate\Http\Request;
@@ -49,6 +50,8 @@ class MovieController extends Controller
         $movie->photo = $data['photo'];
         $movie->created_by = Auth::user()->id;
         $movie->save();
+
+        event(new MoviesEventListner($movie));
 
         return redirect()->route('home')->with('status', 'Movie Succesfully Added!');
     }
